@@ -1,40 +1,63 @@
 package application;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.Properties;
 
 public class DB_Connection {
-	private Connection con = null;
-	private String host = "jdbc:mysql://localhost:3306/world";
-	private String user = "Frank";
-	private String password = "010601Succes$";
+	private Connection connection = null;
 	
-	public DB_Connection() {
+	public DB_Connection(){
 		try {
-			con = DriverManager.getConnection(host,user,password);
-			System.out.println("Connected to database");
-			
-			Statement statement = con.createStatement();
-			ResultSet set = statement.executeQuery("SELECT * FROM user");
-			
-			int count = 0;
-			while(set.next() && count < 10) {
-				System.out.println(set.getInt(1)+" "+set.getString(2)+" "+set.getString(3)+" "+set.getString(4)+" "+set.getInt(5));
-				count++;
-			}
-			
-		}catch(SQLException ex) {
-			throw new Error("Error: ", ex);
-//			System.out.println(String.format("Error here: %s", ex.getMessage()));
-		}finally {
+			String configFilePath = "config.properties";
+			FileInputStream propsInput = new FileInputStream(configFilePath);
+			Properties prop = new Properties();
+			prop.load(propsInput);
+			System.out.println(prop.getProperty("DB_NAME"));
+			String host = "jdbc:mysql://localhost:3306/"+"inventory_management_system";
+			connection = DriverManager.getConnection(host, "Frank", "010601Succes$");
+			System.out.println("connected");
+		} catch (FileNotFoundException e) {
+			e.getMessage();
+		} catch (IOException e) {
+			e.getMessage();
+		} catch (SQLException e) {
+			e.getMessage();
+		} catch(Exception e) {
+			e.getMessage();
+		}
+	}
+	
+	public void open() {
+		String configFilePath = "config.properties";
+		try {
+			FileInputStream propsInput = new FileInputStream(configFilePath);
+			Properties prop = new Properties();
+			prop.load(propsInput);
+			System.out.println(prop.getProperty("DB_NAME"));
+			String host = "jdbc:mysql://localhost:3306/"+"inventory_management_system";
+			connection = DriverManager.getConnection(host, "Frank", "010601Succes$");
+			System.out.println("connected");
+		} catch (FileNotFoundException e) {
+			e.getMessage();
+		} catch (IOException e) {
+			e.getMessage();
+		} catch (SQLException e) {
+			e.getMessage();
+		} catch(Exception e) {
+			e.getMessage();
+		}
+	}
+	
+	public void close() {
+		if(connection != null) {
 			try {
-				if(con != null) {
-					con.close();
-				}
-			}catch(SQLException ex) {
+				connection.close();
+			} catch (SQLException ex) {
 				System.out.println(ex.getMessage());
 			}
 		}

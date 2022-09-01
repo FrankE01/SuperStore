@@ -6,16 +6,23 @@ import java.util.Vector;
 public class Bill {
 
 	private String ID;
-	private Vector<Goods> ProductsPurchased;
+	private Vector<Order> ProductsPurchased;
 	private Date Date;
-	private Vendor Vendor;
 	private int TotalCost;
+	private int TotalQuantity;
 
-	public Bill(String ID, Vector<Goods> ProductsPurchased, Date Date, Vendor Vendor, int TotalCost) {
+	public Bill(String ID, Date Date, int TotalCost) {
+		this.ID = ID;
+		this.ProductsPurchased = new Vector<>();
+		this.Date = Date;
+		this.TotalCost = TotalCost;
+
+	}
+	
+	public Bill(String ID, Vector<Order> ProductsPurchased, Date Date, int TotalCost) {
 		this.ID = ID;
 		this.ProductsPurchased = ProductsPurchased;
 		this.Date = Date;
-		this.Vendor = Vendor;
 		this.TotalCost = TotalCost;
 
 	}
@@ -28,11 +35,11 @@ public class Bill {
 		ID = iD;
 	}
 
-	public Vector<Goods> getProductsPurchased() {
+	public Vector<Order> getProductsPurchased() {
 		return ProductsPurchased;
 	}
 
-	public void setProductsPurchased(Vector<Goods> productsPurchased) {
+	public void setProductsPurchased(Vector<Order> productsPurchased) {
 		ProductsPurchased = productsPurchased;
 	}
 
@@ -44,20 +51,20 @@ public class Bill {
 		Date = date;
 	}
 
-	public Vendor getVendor() {
-		return Vendor;
-	}
-
-	public void setVendor(Vendor vendor) {
-		Vendor = vendor;
-	}
-
 	public int getTotalCost() {
 		return TotalCost;
 	}
 
 	public void setTotalCost(int totalCost) {
 		TotalCost = totalCost;
+	}
+
+	public int getTotalQuantity() {
+		return TotalQuantity;
+	}
+
+	public void setTotalQuantity(int totalQuantity) {
+		TotalQuantity = totalQuantity;
 	}
 
 }

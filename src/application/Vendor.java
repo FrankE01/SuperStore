@@ -6,19 +6,29 @@ public class Vendor {
 
 	private String ID;
 	private String Name;
-	private Vector<Goods> ProductsOffered;
+	private Vector<Product> ProductsOffered;
+	
+	public Vendor() {
+		
+	}
 
 	public Vendor(String ID, String Name) {
 		this.ID = ID;
 		this.Name = Name;
-		this.ProductsOffered = new Vector<Goods>();
+		this.ProductsOffered = new Vector<Product>();
+	}
+	
+	public Vendor(String ID, String Name, Vector<Product> ProductsOffered) {
+		this.ID = ID;
+		this.Name = Name;
+		this.ProductsOffered = ProductsOffered;
 	}
 
-	public Vector<Goods> getProductsOffered() {
+	public Vector<Product> getProductsOffered() {
 		return ProductsOffered;
 	}
 
-	public void setProductsOffered(Vector<Goods> productsOffered) {
+	public void setProductsOffered(Vector<Product> productsOffered) {
 		ProductsOffered = productsOffered;
 	}
 

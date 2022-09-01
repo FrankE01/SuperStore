@@ -1,6 +1,6 @@
 package application;
 
-public class Goods {
+public class Product {
 
 	private String ID;
 	private String Name;
@@ -10,25 +10,26 @@ public class Goods {
 	private Vendor Vendor;
 	private int Quantity;
 	private int ShelfLife;
+	private String Barcode;
 
-	public Goods() {
+	public Product() {
 		this.Quantity = 1;
 	}
 
-	public Goods(String ID) {
+	public Product(String ID) {
 		this.ID = ID;
 		this.Quantity = 1;
 	}
 
-	public Goods(String ID, String Name, Category Category, Vendor Vendor, int Quantity) {
+	public Product(String ID, String Name, Category Category, Vendor Vendor, int Quantity) {
 		this.ID = ID;
 		this.Name = Name;
 		this.Vendor = Vendor;
 		this.Quantity = Quantity;
 	}
 
-	public Goods(String ID, String Name, Category Category, double BuyingPrice, double SellingPrice, Vendor Vendor,
-			int Quantity, int ShelfLife) {
+	public Product(String ID, String Name, Category Category, double BuyingPrice, double SellingPrice, Vendor Vendor,
+			int Quantity, int ShelfLife, String Barcode) {
 		this.ID = ID;
 		this.Name = Name;
 		this.Vendor = Vendor;
@@ -37,6 +38,7 @@ public class Goods {
 		this.BuyingPrice = BuyingPrice;
 		this.SellingPrice = SellingPrice;
 		this.ShelfLife = ShelfLife;
+		this.Barcode = Barcode;
 	}
 
 	public String getID() {
@@ -101,5 +103,13 @@ public class Goods {
 
 	public void setShelfLife(int shelfLife) {
 		ShelfLife = shelfLife;
+	}
+	
+	public String getBarcode() {
+		return Barcode;
+	}
+	
+	public void setBarcode(String barcode) {
+		Barcode = barcode;
 	}
 }
