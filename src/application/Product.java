@@ -9,14 +9,12 @@ public class Product {
 	private double SellingPrice;
 	private Vendor Vendor;
 	private int Quantity;
-	private int ShelfLife;
 	private String Barcode;
 
 	public Product() {
-		this.Quantity = 1;
 	}
 
-	public Product(String ID) {
+	public Product(String ID, String Name, Category Category, double BuyingPrice, double SellingPrice, int Quantity) {
 		this.ID = ID;
 		this.Quantity = 1;
 	}
@@ -29,7 +27,7 @@ public class Product {
 	}
 
 	public Product(String ID, String Name, Category Category, double BuyingPrice, double SellingPrice, Vendor Vendor,
-			int Quantity, int ShelfLife, String Barcode) {
+			int Quantity, String Barcode) {
 		this.ID = ID;
 		this.Name = Name;
 		this.Vendor = Vendor;
@@ -37,7 +35,6 @@ public class Product {
 		this.Category = Category;
 		this.BuyingPrice = BuyingPrice;
 		this.SellingPrice = SellingPrice;
-		this.ShelfLife = ShelfLife;
 		this.Barcode = Barcode;
 	}
 
@@ -95,14 +92,6 @@ public class Product {
 
 	public void setQuantity(int quantity) {
 		Quantity = quantity;
-	}
-
-	public int getShelfLife() {
-		return ShelfLife;
-	}
-
-	public void setShelfLife(int shelfLife) {
-		ShelfLife = shelfLife;
 	}
 	
 	public String getBarcode() {

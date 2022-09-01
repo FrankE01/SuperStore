@@ -160,9 +160,9 @@ public class BillController implements Initializable {
 		billTable.setItems(bills);
 
 		products = new ArrayList<>();
-		products.add(new Product("1", "Coke", new Category("1", "Beverage"), 20d, 30d, new Vendor("1", "Coca-Cola"), 18,
+		products.add(new Product("1", "Coke", new Category("1", "Beverage"), 20d, 30d, new Vendor("1", "Coca-Cola"),
 				300, "204458274890"));
-		products.add(new Product("2", "Apple", new Category("2", "Fruits"), 8d, 15d, new Vendor("2", "Fruitella"), 40,
+		products.add(new Product("2", "Apple", new Category("2", "Fruits"), 8d, 15d, new Vendor("2", "Fruitella"),
 				30, "480467434460"));
 
 		int itemCounter = 0;
