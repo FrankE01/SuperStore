@@ -42,7 +42,7 @@ public class SalesController implements Initializable {
 		Stage productStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
 		try {
-			BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("Application.fxml"));
+			BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("Products.fxml"));
 			Scene scene = new Scene(root, 1280, 720);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			productStage.setScene(scene);

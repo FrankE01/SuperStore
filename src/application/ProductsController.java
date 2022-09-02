@@ -60,6 +60,8 @@ public class ProductsController implements Initializable {
 	public TextField searchBox;
 	public ObservableList<Product> data;
 	public ArrayStack<Product> products;
+	public List<Vendor> vendors;
+	public List<Category> categories;
 
 	public void toVendors(MouseEvent event) {
 
@@ -140,7 +142,44 @@ public class ProductsController implements Initializable {
 			addStage.setMaxHeight(400);
 
 			try {
-				VBox root = (VBox) FXMLLoader.load(getClass().getResource("EditProduct.fxml"));
+				
+				
+				
+//				VBox root = (VBox) FXMLLoader.load(getClass().getResource("EditProduct.fxml"));
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("EditProduct.fxml"));
+				VBox root = (VBox) loader.load();
+
+				EditProductController epc = loader.getController();
+				Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
+				Category selectedCategory = null;
+				Vendor selectedVendor = null;
+				
+				List<String> categoryNames = new ArrayList<>();
+				for(Category c : categories) {
+					categoryNames.add(c.getName());
+					if(selectedProduct.getCategory().getName().equals(c.getName())) {
+						selectedCategory = c;
+					}
+				}
+				List<String> vendorNames = new ArrayList<>();
+				for(Vendor v : vendors) {
+					vendorNames.add(v.getName());
+					if(selectedProduct.getVendor().getName().equals(v.getName())) {
+						selectedVendor = v;
+					}
+				}
+				
+				epc.categoryBox.getItems().setAll(categoryNames);
+				epc.vendorBox.getItems().setAll(vendorNames);
+				
+				epc.categoryBox.getSelectionModel().select(selectedCategory.getName());
+				epc.vendorBox.getSelectionModel().select(selectedVendor.getName());
+				epc.nameBox.setText(selectedProduct.getName());
+				epc.costPriceBox.setText(Double.toString(selectedProduct.getBuyingPrice()));
+				epc.sellingPriceBox.setText(Double.toString(selectedProduct.getSellingPrice()));
+				epc.quantityBox.setText(Integer.toString(selectedProduct.getQuantity()));
+				epc.barcodeBox.setText(selectedProduct.getBarcode());
+				
 				Scene scene = new Scene(root, 600, 400);
 				scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 				addStage.setScene(scene);
@@ -155,7 +194,6 @@ public class ProductsController implements Initializable {
 	public void getRow(MouseEvent event) {
 		if (event.isPrimaryButtonDown()) {
 			Product p = productTable.getSelectionModel().getSelectedItem();
-			System.out.println(productTable.getSelectionModel().getSelectedItem().getName());
 			productName.setText(p.getName());
 			categoryLabel.setText(p.getCategory().getName());
 			quantityLabel.setText(Integer.toString(p.getQuantity()));
@@ -189,19 +227,21 @@ public class ProductsController implements Initializable {
 		try {
 			Statement statement = DB_Connection.connection.createStatement();
 			ResultSet result = statement.executeQuery("SELECT * FROM category");
-			List<Category> categories = new ArrayList<>();
+			categories = new ArrayList<>();
 
 			while (result.next()) {
 				categories.add(new Category(result.getString("id"), result.getString("name")));
 			}
 
 			result = statement.executeQuery("SELECT * FROM supplier");
-			List<Vendor> vendors = new ArrayList<>();
+			vendors = new ArrayList<>();
 
 			while (result.next()) {
 				vendors.add(new Vendor(result.getString("id"), result.getString("name"), result.getString("phone"),
 						result.getString("email")));
 			}
+			
+			products = new ArrayStack<>();
 
 			result = statement.executeQuery("SELECT * FROM product");
 			while (result.next()) {
@@ -224,12 +264,13 @@ public class ProductsController implements Initializable {
 			e.printStackTrace();
 		}
 
-		data = FXCollections.observableArrayList(
-				new Product("1", "Coke", new Category("1", "Beverage"), 20d, 30d, new Vendor("1", "Coca-Cola"), 18,
-						"204458274890"),
-				new Product("2", "Apple", new Category("2", "Fruits"), 8d, 15d, new Vendor("2", "Fruitella"), 40,
-						"480467434460"));
+		data = FXCollections.observableArrayList();
 
+		
+		for(int i = 0; i < products.size(); i++) {
+			data.add(products.pop());
+		}
+		
 		idColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("ID"));
 		productColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("Name"));
 		categoryColumn

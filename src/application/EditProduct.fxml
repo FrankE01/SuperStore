@@ -26,7 +26,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField promptText="Product Name" />
+            <TextField fx:id="nameBox" promptText="Product Name" />
             <Region layoutX="10.0" layoutY="10.0" prefWidth="120.0" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
@@ -38,7 +38,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <ComboBox prefWidth="150.0" promptText="Product Category" />
+            <ComboBox fx:id="categoryBox" prefWidth="150.0" promptText="Product Category" />
             <Region layoutX="10.0" layoutY="10.0" prefWidth="120.0" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
@@ -50,7 +50,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField promptText="Cost Price" />
+            <TextField fx:id="costPriceBox" promptText="Cost Price" />
             <Region layoutX="10.0" layoutY="10.0" prefWidth="120.0" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
@@ -62,7 +62,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField promptText="Selling Price" />
+            <TextField fx:id="sellingPriceBox" promptText="Selling Price" />
             <Region layoutX="10.0" layoutY="10.0" prefWidth="120.0" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
@@ -74,7 +74,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <ComboBox prefWidth="150.0" promptText="Vendor" />
+            <ComboBox fx:id="vendorBox" prefWidth="150.0" promptText="Vendor" />
             <Region layoutX="10.0" layoutY="10.0" prefWidth="120.0" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
@@ -86,19 +86,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField promptText="Quantity in Stock" />
-            <Region layoutX="10.0" layoutY="10.0" prefWidth="120.0" HBox.hgrow="ALWAYS" />
-         </children>
-      </HBox>
-      <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="328.0" prefWidth="200.0" spacing="20.0">
-         <children>
-            <Region prefWidth="120.0" HBox.hgrow="ALWAYS" />
-            <Label text="Shelf Life:">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <TextField promptText="Shelf life (in days)" />
+            <TextField fx:id="quantityBox" promptText="Quantity in Stock" />
             <Region layoutX="10.0" layoutY="10.0" prefWidth="120.0" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
@@ -110,7 +98,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField promptText="12-digit barcode" />
+            <TextField fx:id="barcodeBox" promptText="12-digit barcode" />
             <Region layoutX="10.0" layoutY="10.0" prefWidth="120.0" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>

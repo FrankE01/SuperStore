@@ -19,7 +19,7 @@
       <Region prefHeight="75.0" prefWidth="1280.0" />
       <ImageView fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../../Downloads/NBC_Superstore.png" />
+            <Image url="@../../NBC_Superstore.png" />
          </image>
       </ImageView>
       <Region prefHeight="111.0" prefWidth="1280.0" />

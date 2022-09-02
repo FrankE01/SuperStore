@@ -36,7 +36,7 @@ public class VendorController implements Initializable {
 		Stage productStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
 		try {
-			BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("Application.fxml"));
+			BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("Products.fxml"));
 			Scene scene = new Scene(root, 1280, 720);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			productStage.setScene(scene);
@@ -157,7 +157,7 @@ public class VendorController implements Initializable {
 		names = FXCollections.observableArrayList(new Vendor("1", "BelAqua"),
 				new Vendor("2", "Coca-Cola"), new Vendor("3", "HP"));
 
-		Product p = new Product("1", "Coke", new Category("1", "Beverage"), 20d, 30d, new Vendor("1", "Coca-Cola"), 18,
+		Product p = new Product("1", "Coke", new Category("1", "Beverage"), 20d, 30d, new Vendor("1", "Coca-Cola"),
 				300, "204458274890");
 		Vector<Product> list = new Vector<>();
 		for (int i = 0; i < 5; i++) {
