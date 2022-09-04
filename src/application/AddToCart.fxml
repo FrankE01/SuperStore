@@ -120,7 +120,7 @@
       </HBox>
       <HBox alignment="CENTER" layoutX="10.0" layoutY="319.0" prefWidth="200.0" spacing="20.0">
          <children>
-            <Button fx:id="addButton" mnemonicParsing="false" style="-fx-background-color: #246ded; -fx-background-radius: 30;" text="Add" textAlignment="CENTER" textFill="WHITE">
+            <Button fx:id="addButton" mnemonicParsing="false" onAction="#add" style="-fx-background-color: #246ded; -fx-background-radius: 30;" text="Add" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font size="14.0" />
                </font>

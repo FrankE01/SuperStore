@@ -1,32 +1,35 @@
 package application;
 
 public class Order {
-	private String ID;
-	private String ProductId;
+	private int ID;
 	private String ProductName;
+	private String ProductBarcode;
 	private int QuantitySold;
 	private double TotalPrice;
 	private Vendor Vendor;
-	private String ProductBarcode;
 	
-	public Order(String iD, String productID, String productName, int quantitySold) {
+	public Order(int iD, String productName, String productBarcode, int quantitySold, double totalPrice, Vendor vendor) {
 		this.ID = iD;
-		this.ProductId = productID;
 		this.ProductName = productName;
+		this.ProductBarcode = productBarcode;
 		this.QuantitySold = quantitySold;
+		this.TotalPrice = totalPrice;
+		this.Vendor = vendor;
 	}
 	
-	public String getID() {
+	public Order(int iD, String productName, String productBarcode, int quantitySold, double totalPrice) {
+		this.ID = iD;
+		this.ProductName = productName;
+		this.ProductBarcode = productBarcode;
+		this.QuantitySold = quantitySold;
+		this.TotalPrice = totalPrice;
+	}
+	
+	public int getID() {
 		return ID;
 	}
-	public void setID(String iD) {
+	public void setID(int iD) {
 		ID = iD;
-	}
-	public String getProductId() {
-		return ProductId;
-	}
-	public void setProductId(String productId) {
-		ProductId = productId;
 	}
 	public String getProductName() {
 		return ProductName;

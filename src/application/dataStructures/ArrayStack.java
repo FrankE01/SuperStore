@@ -13,7 +13,8 @@ public class ArrayStack<T> implements StackADT<T> {
     }
 
     // constructor 2
-    public ArrayStack(int initialCapacity){
+    @SuppressWarnings("unchecked")
+	public ArrayStack(int initialCapacity){
         top = 0;
 
         // creates an array of size, initialCapacity

@@ -7,7 +7,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -59,7 +58,7 @@ public class ProductsController implements Initializable {
 	public ImageView barcode;
 	public TextField searchBox;
 	public ObservableList<Product> data;
-	public ArrayStack<Product> products;
+	public ArrayStack<Product> products1to4;
 	public List<Vendor> vendors;
 	public List<Category> categories;
 
@@ -118,7 +117,24 @@ public class ProductsController implements Initializable {
 		addStage.setMaxHeight(400);
 
 		try {
-			VBox root = (VBox) FXMLLoader.load(getClass().getResource("AddProduct.fxml"));
+//			VBox root = (VBox) FXMLLoader.load(getClass().getResource("AddProduct.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("AddProduct.fxml"));
+			VBox root = (VBox) loader.load();
+
+			AddProductController apc = loader.getController();
+
+			List<String> categoryNames = new ArrayList<>();
+			for (Category c : categories) {
+				categoryNames.add(c.getName());
+			}
+			List<String> vendorNames = new ArrayList<>();
+			for (Vendor v : vendors) {
+				vendorNames.add(v.getName());
+			}
+
+			apc.categoryBox.getItems().setAll(categoryNames);
+			apc.vendorBox.getItems().setAll(vendorNames);
+
 			Scene scene = new Scene(root, 600, 400);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			addStage.setScene(scene);
@@ -142,9 +158,7 @@ public class ProductsController implements Initializable {
 			addStage.setMaxHeight(400);
 
 			try {
-				
-				
-				
+
 //				VBox root = (VBox) FXMLLoader.load(getClass().getResource("EditProduct.fxml"));
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("EditProduct.fxml"));
 				VBox root = (VBox) loader.load();
@@ -153,25 +167,25 @@ public class ProductsController implements Initializable {
 				Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
 				Category selectedCategory = null;
 				Vendor selectedVendor = null;
-				
+
 				List<String> categoryNames = new ArrayList<>();
-				for(Category c : categories) {
+				for (Category c : categories) {
 					categoryNames.add(c.getName());
-					if(selectedProduct.getCategory().getName().equals(c.getName())) {
+					if (selectedProduct.getCategory().getName().equals(c.getName())) {
 						selectedCategory = c;
 					}
 				}
 				List<String> vendorNames = new ArrayList<>();
-				for(Vendor v : vendors) {
+				for (Vendor v : vendors) {
 					vendorNames.add(v.getName());
-					if(selectedProduct.getVendor().getName().equals(v.getName())) {
+					if (selectedProduct.getVendor().getName().equals(v.getName())) {
 						selectedVendor = v;
 					}
 				}
-				
+
 				epc.categoryBox.getItems().setAll(categoryNames);
 				epc.vendorBox.getItems().setAll(vendorNames);
-				
+
 				epc.categoryBox.getSelectionModel().select(selectedCategory.getName());
 				epc.vendorBox.getSelectionModel().select(selectedVendor.getName());
 				epc.nameBox.setText(selectedProduct.getName());
@@ -179,7 +193,8 @@ public class ProductsController implements Initializable {
 				epc.sellingPriceBox.setText(Double.toString(selectedProduct.getSellingPrice()));
 				epc.quantityBox.setText(Integer.toString(selectedProduct.getQuantity()));
 				epc.barcodeBox.setText(selectedProduct.getBarcode());
-				
+				epc.nameBox.setUserData(selectedProduct);
+
 				Scene scene = new Scene(root, 600, 400);
 				scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 				addStage.setScene(scene);
@@ -192,7 +207,7 @@ public class ProductsController implements Initializable {
 	}
 
 	public void getRow(MouseEvent event) {
-		if (event.isPrimaryButtonDown()) {
+		if (event.isPrimaryButtonDown() && productTable.getSelectionModel().getSelectedItems().size() > 0) {
 			Product p = productTable.getSelectionModel().getSelectedItem();
 			productName.setText(p.getName());
 			categoryLabel.setText(p.getCategory().getName());
@@ -221,42 +236,48 @@ public class ProductsController implements Initializable {
 		}
 	}
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-
+	public void updateTable() {
 		try {
 			Statement statement = DB_Connection.connection.createStatement();
 			ResultSet result = statement.executeQuery("SELECT * FROM category");
 			categories = new ArrayList<>();
 
 			while (result.next()) {
-				categories.add(new Category(result.getString("id"), result.getString("name")));
+				categories.add(new Category(result.getInt("id"), result.getString("name")));
 			}
 
 			result = statement.executeQuery("SELECT * FROM supplier");
 			vendors = new ArrayList<>();
 
 			while (result.next()) {
-				vendors.add(new Vendor(result.getString("id"), result.getString("name"), result.getString("phone"),
+				vendors.add(new Vendor(result.getInt("id"), result.getString("name"), result.getString("phone"),
 						result.getString("email")));
 			}
-			
-			products = new ArrayStack<>();
+
+			products1to4 = new ArrayStack<>();
 
 			result = statement.executeQuery("SELECT * FROM product");
 			while (result.next()) {
-				if (result.getInt("category") == 1 || result.getInt("category") == 2 || result.getInt("category") == 3
-						|| result.getInt("category") == 4) {
+				int category = result.getInt("category");
+				if (category == 1 || category == 2 || category == 3 || category == 4) {
+					String name = result.getString("name");
 
-					String vendorID = result.getString("supplier");
+					int vendorID = result.getInt("supplier");
+					Vendor selectedV = null;
+					Category selectedC = null;
 					for (Vendor v : vendors) {
-						if (v.getID().equals(vendorID)) {
-							products.push(new Product(result.getString("id"), result.getString("name"),
-									categories.get(result.getInt("category")), (double) result.getInt("cost_price"),
-									(double) result.getInt("selling_price"), v, result.getInt("quantity"),
-									result.getString("barcode")));
+						if (v.getID() == (vendorID)) {
+							selectedV = v;
 						}
 					}
+					for (Category c : categories) {
+						if (c.getID() == category) {
+							selectedC = c;
+						}
+					}
+					products1to4.push(new Product(result.getInt("id"), name, selectedC,
+							(double) result.getInt("cost_price"), (double) result.getInt("selling_price"), selectedV,
+							result.getInt("quantity"), result.getString("barcode")));
 				}
 			}
 
@@ -266,11 +287,12 @@ public class ProductsController implements Initializable {
 
 		data = FXCollections.observableArrayList();
 
-		
-		for(int i = 0; i < products.size(); i++) {
-			data.add(products.pop());
+		int size = products1to4.size();
+		for (int i = 0; i < size; i++) {
+			Product p = products1to4.pop();
+			data.add(p);
 		}
-		
+
 		idColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("ID"));
 		productColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("Name"));
 		categoryColumn
@@ -295,6 +317,11 @@ public class ProductsController implements Initializable {
 		} else {
 			totalItems.setText(totalItemsCounter + " items");
 		}
+	}
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		this.updateTable();
 
 	}
 

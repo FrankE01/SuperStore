@@ -1,9 +1,15 @@
 package application;
 
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import org.json.JSONArray;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -36,6 +42,10 @@ public class SalesController implements Initializable {
 	public Label taxLabel;
 	public Label totalLabel;
 	public TextField searchBox;
+	public List<Order> orders;
+	public List<Category> categories;
+	public List<Vendor> vendors;
+	public int tax = 10;
 
 	public void toProducts(MouseEvent event) {
 
@@ -82,51 +92,60 @@ public class SalesController implements Initializable {
 	}
 
 	public void addButtonClick() {
-		products.forEach(p -> {
-			if (!searchBox.getText().isBlank()
-					&& p.getBarcode().toLowerCase().contains(searchBox.getText().toLowerCase())) {
-				Stage addStage = new Stage();
-				addStage.initModality(Modality.APPLICATION_MODAL);
-				addStage.setTitle("Add To Cart");
-				addStage.resizableProperty().setValue(Boolean.FALSE);
-				addStage.setMinWidth(600);
-				addStage.setMaxWidth(600);
-				addStage.setMinHeight(400);
-				addStage.setMaxHeight(400);
+		if (products.size() > 0) {
 
-				class UserData {
-					public Product selectedProduct;
-					public List<Product> allProducts;
+			for (Product p : products) {
+				if (!searchBox.getText().isBlank()
+						&& (p.getBarcode().equals(searchBox.getText()) || p.getName().equals(searchBox.getText()))) {
+					Stage addStage = new Stage();
+					addStage.initModality(Modality.APPLICATION_MODAL);
+					addStage.setTitle("Add To Cart");
+					addStage.resizableProperty().setValue(Boolean.FALSE);
+					addStage.setMinWidth(600);
+					addStage.setMaxWidth(600);
+					addStage.setMinHeight(400);
+					addStage.setMaxHeight(400);
+
+					try {
+						FXMLLoader loader = new FXMLLoader(getClass().getResource("AddToCart.fxml"));
+						VBox root = (VBox) loader.load();
+
+						AddToCartController atcc = loader.getController();
+						atcc.barcodeLabel.setText(p.getBarcode());
+						atcc.nameLabel.setText(p.getName());
+						atcc.categoryLabel.setText(p.getCategory().getName());
+						atcc.priceLabel.setText(Double.toString(p.getSellingPrice()));
+						atcc.vendorLabel.setText(p.getVendor().getName());
+						atcc.quantityLabel.setText(Integer.toString(p.getQuantity()));
+						atcc.nameLabel.setUserData(p);
+
+						Scene scene = new Scene(root, 600, 400);
+						scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+						addStage.setScene(scene);
+						addStage.showAndWait();
+
+						orders.add(new Order(p.getID(), p.getName(), p.getBarcode(), atcc.returnQuantity(),
+								p.getSellingPrice() * atcc.returnQuantity()));
+						
+						sales = FXCollections.observableArrayList();
+						for (Order o : orders) {
+							sales.add(o);
+						}
+						barcodeColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("ProductBarcode"));
+						productColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("ProductName"));
+						quantityColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("QuantitySold"));
+						priceColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("TotalPrice"));
+						saleTable.setItems(sales);
+						taxLabel.setText(Integer.toString(tax));
+						calculateTotal();
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					calculateTotal();
 				}
-
-				UserData data = new UserData();
-				data.selectedProduct = p;
-				data.allProducts = products;
-				addStage.setUserData(data);
-
-				try {
-					FXMLLoader loader = new FXMLLoader(getClass().getResource("AddToCart.fxml"));
-					VBox root = (VBox) loader.load();
-
-					AddToCartController atcc = loader.getController();
-					atcc.barcodeLabel.setText(p.getBarcode());
-					atcc.nameLabel.setText(p.getName());
-					atcc.categoryLabel.setText(p.getCategory().getName());
-					atcc.priceLabel.setText(Double.toString(p.getSellingPrice()));
-					atcc.vendorLabel.setText(p.getVendor().getName());
-					atcc.quantityLabel.setText(Integer.toString(p.getQuantity()));
-
-					Scene scene = new Scene(root, 600, 400);
-					scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-					addStage.setScene(scene);
-					addStage.showAndWait();
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				calculateTotal();
 			}
-		});
+		}
 	}
 
 	public void handleSearchEnter(KeyEvent key) {
@@ -136,14 +155,61 @@ public class SalesController implements Initializable {
 	}
 
 	public void removeButtonClick() {
-		if (saleTable.getSelectionModel().getSelectedItems().size() > 0) {
-			sales.remove(saleTable.getSelectionModel().getSelectedItem());
+		Order selectedOrder = saleTable.getSelectionModel().getSelectedItem();
+
+		try {
+			Statement statement = DB_Connection.connection.createStatement();
+			String query = String.format("DELETE FROM inventory_management_system.order WHERE (id = %d);",
+					selectedOrder.getID());
+			statement.executeUpdate(query);
+			updateTable();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+
 		calculateTotal();
 	}
 
 	public void makeOrderButtonClick() {
+		List<Integer> ordersIDList = new ArrayList<>();
+		Statement statement;
+		int total_quantity = 0;
+		double total_price = 0;
+		for (Order o : orders) {
+			ordersIDList.add(o.getID());
+			total_quantity += o.getQuantitySold();
+			total_price += o.getTotalPrice();
+		}
+		total_price+=tax;
+		System.out.println(total_price);
+		try {
+			statement = DB_Connection.connection.createStatement();
+//			ResultSet result = statement.executeQuery("SELECT * FROM inventory_management_system.order");
+//			while (result.next()) {
+//				int id = result.getInt("id");
+//				int quantity_sold = result.getInt("quantity_sold");
+//				double totalPrice = result.getDouble("total_price");
+//				ordersIDList.add(id);
+//				orders.add(new Order(result.getInt("id"), result.getString("name"), result.getString("barcode"),
+//						result.getInt("quantity_sold"), result.getDouble("total_price")));
 
+//			}
+			JSONArray orderJSON = new JSONArray(ordersIDList);
+
+			String query = String.format(
+					"INSERT INTO order_list (orders, total_quantity,total_price, date) VALUES ('%s', %d, %.2f, '%s')",
+					orderJSON, total_quantity, total_price + tax, LocalDateTime.now());
+			statement.executeUpdate(query);
+
+			ErrorMessage.display("Order Placed", "Order has been placed successfully");
+
+			sales = FXCollections.observableArrayList();
+			saleTable.setItems(sales);
+			orders = new ArrayList<>();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void calculateTotal() {
@@ -157,35 +223,87 @@ public class SalesController implements Initializable {
 		totalLabel.setText(Double.toString(priceCounter + 10));
 	}
 
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		products = new ArrayList<>();
-		products.add(new Product("1", "Coke", new Category("1", "Beverage"), 20d, 30d, new Vendor("1", "Coca-Cola"),
-				300, "204458274890"));
-		products.add(new Product("2", "Apple", new Category("2", "Fruits"), 8d, 15d, new Vendor("2", "Fruitella"),
-				30, "480467434460"));
+	public void updateTable() {
+		Statement statement;
+		try {
+			statement = DB_Connection.connection.createStatement();
+			ResultSet result = statement.executeQuery("SELECT * FROM supplier");
+			vendors = new ArrayList<>();
 
-		sales = FXCollections.observableArrayList(
-				new Order("1", products.get(0).getID(), products.get(0).getName(), 10),
-				new Order("2", products.get(1).getID(), products.get(1).getName(), 10));
-
-		for (Order o : sales) {
-			for (Product p : products) {
-				if (p.getID().equals(o.getProductId())) {
-					o.setProductBarcode(p.getBarcode());
-					o.setTotalPrice(o.getQuantitySold() * p.getSellingPrice());
-					o.setVendor(p.getVendor());
-				}
+			while (result.next()) {
+				vendors.add(new Vendor(result.getInt("id"), result.getString("name"), result.getString("phone"),
+						result.getString("email")));
 			}
+
+//			orders = new ArrayList<>();
+//			result = statement.executeQuery("SELECT * FROM inventory_management_system.order");
+//			while (result.next()) {
+//
+//				int vendorID = result.getInt("supplier");
+//				for (Vendor v : vendors) {
+//					if (v.getID() == vendorID) {
+//						orders.add(new Order(result.getInt("id"), result.getString("name"), result.getString("barcode"),
+//								result.getInt("quantity_sold"), result.getDouble("total_price"), v));
+//					}
+//				}
+//
+//			}
+
+			result = statement.executeQuery("SELECT * FROM category");
+			categories = new ArrayList<>();
+
+			while (result.next()) {
+				categories.add(new Category(result.getInt("id"), result.getString("name")));
+			}
+
+			result = statement.executeQuery("SELECT * FROM product");
+			products = new ArrayList<>();
+
+			while (result.next()) {
+				int category = result.getInt("category");
+				String name = result.getString("name");
+
+				int vendorID = result.getInt("supplier");
+				Vendor selectedV = null;
+				Category selectedC = null;
+				for (Vendor v : vendors) {
+					if (v.getID() == (vendorID)) {
+						selectedV = v;
+					}
+				}
+				for (Category c : categories) {
+					if (c.getID() == category) {
+						selectedC = c;
+					}
+				}
+				products.add(new Product(result.getInt("id"), name, selectedC, (double) result.getInt("cost_price"),
+						(double) result.getInt("selling_price"), selectedV, result.getInt("quantity"),
+						result.getString("barcode")));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 
-		barcodeColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("ProductBarcode"));
-		productColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("ProductName"));
-		quantityColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("QuantitySold"));
-		priceColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("TotalPrice"));
-		saleTable.setItems(sales);
-		taxLabel.setText("10");
-		calculateTotal();
+		sales = FXCollections.observableArrayList();
+//		for (Order o : orders) {
+//			sales.add(o);
+//		}
+
+//		barcodeColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("ProductBarcode"));
+//		productColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("ProductName"));
+//		quantityColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("QuantitySold"));
+//		priceColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("TotalPrice"));
+//		saleTable.setItems(sales);
+//		taxLabel.setText(Integer.toString(tax));
+//		calculateTotal();
+	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+
+		updateTable();
+		orders = new ArrayList<>();
 
 	}
 }

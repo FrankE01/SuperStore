@@ -104,7 +104,7 @@
       </HBox>
       <HBox alignment="CENTER" layoutX="10.0" layoutY="319.0" prefWidth="200.0" spacing="20.0">
          <children>
-            <Button fx:id="addButton" mnemonicParsing="false" style="-fx-background-color: red; -fx-background-radius: 30;" text="Delete" textAlignment="CENTER" textFill="WHITE">
+            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#delete" style="-fx-background-color: red; -fx-background-radius: 30;" text="Delete" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font size="14.0" />
                </font>
@@ -115,7 +115,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="addButton1" layoutX="277.0" layoutY="10.0" mnemonicParsing="false" style="-fx-background-color: #246ded; -fx-background-radius: 30;" text="Add" textAlignment="CENTER" textFill="WHITE">
+            <Button fx:id="editButton" layoutX="277.0" layoutY="10.0" mnemonicParsing="false" onAction="#edit" style="-fx-background-color: #246ded; -fx-background-radius: 30;" text="Edit" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font size="14.0" />
                </font>

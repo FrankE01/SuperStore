@@ -136,8 +136,9 @@
       <TableView fx:id="billTable" onMousePressed="#getRow" prefHeight="598.0" prefWidth="200.0" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
          <columns>
             <TableColumn fx:id="idColumn" prefWidth="133.60003358125687" text="ID" />
-            <TableColumn fx:id="quantityColumn" prefWidth="292.8000793457031" style="-fx-padding: 0 0 0 10;" text="Total Quantity" />
-            <TableColumn fx:id="dateColumn" prefWidth="310.39995117187505" style="-fx-padding: 0 0 0 10;" text="Date" />
+            <TableColumn fx:id="quantityColumn" prefWidth="149.6000518798828" style="-fx-padding: 0 0 0 10;" text="Total Quantity" />
+            <TableColumn fx:id="priceColumn" prefWidth="178.39996337890625" style="-fx-padding: 0 0 0 10;" text="Total Quantity" />
+            <TableColumn fx:id="dateColumn" prefWidth="275.20000000000005" text="Date" />
          </columns>
       </TableView>
    </center>

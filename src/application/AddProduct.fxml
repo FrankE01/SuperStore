@@ -11,8 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox fx:controller="application.AddProductController" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="8.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="8.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.AddProductController">
    <children>
       <Label text="Add Product">
          <font>
@@ -27,7 +26,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField promptText="Product Name" />
+            <TextField fx:id="nameBox" promptText="Product Name" />
          </children>
       </HBox>
       <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="203.0" prefWidth="200.0" spacing="20.0">
@@ -38,7 +37,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <ComboBox prefWidth="150.0" promptText="Product Category" />
+            <ComboBox fx:id="categoryBox" prefWidth="150.0" promptText="Product Category" />
          </children>
       </HBox>
       <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="264.0" prefWidth="200.0" spacing="20.0">
@@ -49,7 +48,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField promptText="Cost Price" />
+            <TextField fx:id="costPriceBox" promptText="Cost Price" />
          </children>
       </HBox>
       <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="280.0" prefWidth="200.0" spacing="20.0">
@@ -60,7 +59,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField promptText="Selling Price" />
+            <TextField fx:id="sellingPriceBox" promptText="Selling Price" />
          </children>
       </HBox>
       <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="296.0" prefWidth="200.0" spacing="20.0">
@@ -71,7 +70,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <ComboBox prefWidth="150.0" promptText="Vendor" />
+            <ComboBox fx:id="vendorBox" prefWidth="150.0" promptText="Vendor" />
          </children>
       </HBox>
       <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="312.0" prefWidth="200.0" spacing="20.0">
@@ -82,18 +81,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField promptText="Quantity in Stock" />
-         </children>
-      </HBox>
-      <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="328.0" prefWidth="200.0" spacing="20.0">
-         <children>
-            <Region prefWidth="120.0" />
-            <Label text="Shelf Life:">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <TextField promptText="Shelf life (in days)" />
+            <TextField fx:id="quantityBox" promptText="Quantity in Stock" />
          </children>
       </HBox>
       <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="344.0" prefWidth="200.0" spacing="20.0">
@@ -104,12 +92,12 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField promptText="12-digit barcode" />
+            <TextField fx:id="barcodeBox" promptText="12-digit barcode" />
          </children>
       </HBox>
       <HBox alignment="CENTER" layoutX="10.0" layoutY="319.0" prefWidth="200.0" spacing="20.0">
          <children>
-            <Button fx:id="addButton" mnemonicParsing="false" style="-fx-background-color: #246ded; -fx-background-radius: 30;" text="Add" textAlignment="CENTER" textFill="WHITE">
+            <Button fx:id="addButton" mnemonicParsing="false" onAction="#add" style="-fx-background-color: #246ded; -fx-background-radius: 30;" text="Add" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font size="14.0" />
                </font>

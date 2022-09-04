@@ -1,11 +1,16 @@
 package application;
 
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
+import application.dataStructures.ArrayStack;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -30,6 +35,9 @@ public class VendorController implements Initializable {
 	public ListView<String> productsList;
 	public TextField searchBox;
 	public Label totalVendors;
+	public List<Vendor> vendors;
+	public List<Category> categories;
+	public ArrayStack<Product> products1to4;
 
 	public void toProducts(MouseEvent event) {
 
@@ -83,7 +91,7 @@ public class VendorController implements Initializable {
 		addStage.setMaxWidth(600);
 		addStage.setMinHeight(400);
 		addStage.setMaxHeight(400);
-		
+
 		try {
 			VBox root = (VBox) FXMLLoader.load(getClass().getResource("AddVendor.fxml"));
 			Scene scene = new Scene(root, 600, 400);
@@ -95,10 +103,10 @@ public class VendorController implements Initializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void edit() {
-		if(vendorList.getSelectionModel().getSelectedItems().size() > 0) {
-				
+		if (vendorList.getSelectionModel().getSelectedItems().size() > 0) {
+
 			Stage addStage = new Stage();
 			addStage.initModality(Modality.APPLICATION_MODAL);
 			addStage.setTitle("Edit Category");
@@ -107,73 +115,160 @@ public class VendorController implements Initializable {
 			addStage.setMaxWidth(600);
 			addStage.setMinHeight(400);
 			addStage.setMaxHeight(400);
-			
+
 			try {
-				VBox root = (VBox) FXMLLoader.load(getClass().getResource("EditVendor.fxml"));
+//				VBox root = (VBox) FXMLLoader.load(getClass().getResource("EditVendor.fxml"));
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("EditVendor.fxml"));
+				VBox root = (VBox) loader.load();
+
+				EditVendorController evc = loader.getController();
+
+				Vendor selectedVendor = null;
+				for (Vendor v : vendors) {
+					if (v.getName().equals(vendorList.getSelectionModel().getSelectedItem())) {
+						selectedVendor = v;
+					}
+				}
+				evc.nameBox.setText(selectedVendor.getName());
+				evc.phoneBox.setText(selectedVendor.getPhone());
+				evc.emailBox.setText(selectedVendor.getEmail());
+				evc.nameBox.setUserData(selectedVendor);
+
 				Scene scene = new Scene(root, 600, 400);
 				scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 				addStage.setScene(scene);
 				addStage.showAndWait();
-	
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
 	}
-	}
-	
+
 	public void getVendor(MouseEvent event) {
-		if(event.isPrimaryButtonDown()) {
+		if (event.isPrimaryButtonDown()) {
 			String vendorName = vendorList.getSelectionModel().getSelectedItem();
 			List<String> products = new LinkedList<>();
-			
+
 			names.forEach(ve -> {
-				if(ve.getName().equals(vendorName)) {
-					ve.getProductsOffered().forEach(p->products.add(p.getName()));
+				if (ve.getName().equals(vendorName)) {
+					ve.getProductsOffered().forEach(p -> {
+						products.add(p.getName());
+					});
 				}
 			});
-			
+
 			productsList.getItems().setAll(products);
 		}
 	}
-	
+
 	public void findButtonClick() {
 		names.forEach(ve -> {
-			if(ve.getName().toLowerCase().contains(searchBox.getText().toLowerCase())) {
+			if (ve.getName().toLowerCase().contains(searchBox.getText().toLowerCase())) {
 				vendorList.getSelectionModel().select(ve.getName());
 			}
 		});
 	}
-	
+
 	public void handleSearchEnter(KeyEvent key) {
 		if (key.getCode().equals(KeyCode.ENTER)) {
 			this.findButtonClick();
 		}
 	}
-	
+
+	public void updateList() {
+		try {
+			Statement statement = DB_Connection.connection.createStatement();
+			ResultSet result = statement.executeQuery("SELECT * FROM category");
+			categories = new ArrayList<>();
+
+			while (result.next()) {
+				categories.add(new Category(result.getInt("id"), result.getString("name")));
+			}
+
+			result = statement.executeQuery("SELECT * FROM supplier");
+			vendors = new ArrayList<>();
+
+			while (result.next()) {
+				vendors.add(new Vendor(result.getInt("id"), result.getString("name"), result.getString("phone"),
+						result.getString("email")));
+			}
+
+			products1to4 = new ArrayStack<>();
+
+			result = statement.executeQuery("SELECT * FROM product");
+			while (result.next()) {
+				int category = result.getInt("category");
+				if (category == 1 || category == 2 || category == 3 || category == 4) {
+					String name = result.getString("name");
+
+					int vendorID = result.getInt("supplier");
+					Vendor selectedV = null;
+					Category selectedC = null;
+					for (Vendor v : vendors) {
+						if (v.getID() == (vendorID)) {
+							selectedV = v;
+						}
+					}
+					for (Category c : categories) {
+						if (c.getID() == category) {
+							selectedC = c;
+						}
+					}
+					products1to4.push(new Product(result.getInt("id"), name, selectedC,
+							(double) result.getInt("cost_price"), (double) result.getInt("selling_price"), selectedV,
+							result.getInt("quantity"), result.getString("barcode")));
+				}
+			}
+			names = FXCollections.observableArrayList();
+//			for (Vendor v : vendors) {
+//				Vector<Product> vendorProducts = new Vector<>();
+//				int size = products1to4.size();
+//				System.out.println(size);
+//				for (int i = 0; i <= size; i++) {
+//					Product current = products1to4.pop();
+//					if (current.getVendor().getID() == v.getID()) {
+//						vendorProducts.add(current);
+//					}
+//				}
+//				v.setProductsOffered(vendorProducts);
+//				names.add(v);
+//			}
+			
+			int size = products1to4.size();
+			for(int i = 0; i < size; i++) {
+				Product current = products1to4.pop();
+				for(Vendor v : vendors) {
+					if(current.getVendor().getID()==v.getID()) {
+						v.getProductsOffered().add(current);
+					}
+					if(!names.contains(v)) {
+						names.add(v);
+					}
+				}
+			}
+			
+
+			List<String> nameList = new LinkedList<>();
+			names.forEach(v -> {
+				nameList.add(v.getName());
+			});
+			vendorList.getItems().setAll(nameList);
+			if (names.size() == 1) {
+				totalVendors.setText("1 vendor");
+			} else {
+				totalVendors.setText(names.size() + " vendors");
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
-		names = FXCollections.observableArrayList(new Vendor("1", "BelAqua"),
-				new Vendor("2", "Coca-Cola"), new Vendor("3", "HP"));
-
-		Product p = new Product("1", "Coke", new Category("1", "Beverage"), 20d, 30d, new Vendor("1", "Coca-Cola"),
-				300, "204458274890");
-		Vector<Product> list = new Vector<>();
-		for (int i = 0; i < 5; i++) {
-			list.add(p);
-		}
-
-		List<String> nameList = new LinkedList<>();
-		names.forEach(v -> {
-			v.setProductsOffered(list);
-			nameList.add(v.getName());
-		});
-		vendorList.getItems().setAll(nameList);
-		if(names.size()==1) {
-			totalVendors.setText("1 vendor");
-		} else {			
-			totalVendors.setText(names.size()+" vendors");
-		}
+		this.updateList();
 	}
 }

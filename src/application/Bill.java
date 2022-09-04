@@ -5,33 +5,35 @@ import java.util.Vector;
 
 public class Bill {
 
-	private String ID;
+	private int ID;
 	private Vector<Order> ProductsPurchased;
 	private Date Date;
 	private int TotalCost;
 	private int TotalQuantity;
 
-	public Bill(String ID, Date Date, int TotalCost) {
+	public Bill(int ID, Date Date, int TotalCost, int TotalQuantity) {
 		this.ID = ID;
 		this.ProductsPurchased = new Vector<>();
 		this.Date = Date;
 		this.TotalCost = TotalCost;
+		this.TotalQuantity = TotalQuantity;
 
 	}
 	
-	public Bill(String ID, Vector<Order> ProductsPurchased, Date Date, int TotalCost) {
+	public Bill(int ID, Vector<Order> ProductsPurchased, Date Date, int TotalCost, int TotalQuantity) {
 		this.ID = ID;
 		this.ProductsPurchased = ProductsPurchased;
 		this.Date = Date;
 		this.TotalCost = TotalCost;
+		this.TotalQuantity = TotalQuantity;
 
 	}
 
-	public String getID() {
+	public int getID() {
 		return ID;
 	}
 
-	public void setID(String iD) {
+	public void setID(int iD) {
 		ID = iD;
 	}
 

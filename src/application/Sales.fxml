@@ -18,7 +18,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<BorderPane prefHeight="720.0" prefWidth="1280.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SalesController">
+<BorderPane onMouseEntered="#updateTable" prefHeight="720.0" prefWidth="1280.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SalesController">
    <top>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" BorderPane.alignment="CENTER_LEFT">
          <children>
@@ -57,7 +57,7 @@
                </children>
             </VBox>
             <Region prefHeight="100.0" prefWidth="90.0" HBox.hgrow="ALWAYS" />
-            <TextField fx:id="searchBox" onKeyPressed="#handleSearchEnter" prefHeight="40.0" prefWidth="300.0" promptText="Search by product barcode" style="-fx-background-radius: 30;">
+            <TextField fx:id="searchBox" onKeyPressed="#handleSearchEnter" prefHeight="40.0" prefWidth="300.0" promptText="Search" style="-fx-background-radius: 30;">
                <padding>
                   <Insets left="30.0" right="30.0" />
                </padding>
@@ -100,12 +100,12 @@
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
             <Region prefHeight="109.0" prefWidth="100.0" />
-            <Circle fx:id="productsCircle" fill="#246ded" radius="30.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-translate-y: 45; -fx-fill: transparent;">
+            <Circle fx:id="productsCircle" fill="#246ded" onMouseClicked="#toProducts" radius="30.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-translate-y: 45; -fx-fill: transparent;">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Circle>
-            <FontIcon fx:id="productsIcon" iconLiteral="fas-shopping-bag" iconSize="30" selectionFill="#c7c7c7">
+            <FontIcon fx:id="productsIcon" iconLiteral="fas-shopping-bag" iconSize="30" onMouseClicked="#toProducts" selectionFill="#c7c7c7">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>

@@ -2,19 +2,19 @@ package application;
 
 public class Category {
 
-	private String ID;
+	private int ID;
 	private String Name;
 
-	public Category(String ID, String Name) {
+	public Category(int ID, String Name) {
 		this.ID = ID;
 		this.Name = Name;
 	}
 
-	public String getID() {
+	public int getID() {
 		return ID;
 	}
 
-	public void setID(String iD) {
+	public void setID(int iD) {
 		ID = iD;
 	}
 

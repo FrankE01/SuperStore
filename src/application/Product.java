@@ -2,7 +2,7 @@ package application;
 
 public class Product {
 
-	private String ID;
+	private int ID;
 	private String Name;
 	private Category Category;
 	private double BuyingPrice;
@@ -14,19 +14,19 @@ public class Product {
 	public Product() {
 	}
 
-	public Product(String ID, String Name, Category Category, double BuyingPrice, double SellingPrice, int Quantity) {
+	public Product(int ID, String Name, Category Category, double BuyingPrice, double SellingPrice, int Quantity) {
 		this.ID = ID;
 		this.Quantity = 1;
 	}
 
-	public Product(String ID, String Name, Category Category, Vendor Vendor, int Quantity) {
+	public Product(int ID, String Name, Category Category, Vendor Vendor, int Quantity) {
 		this.ID = ID;
 		this.Name = Name;
 		this.Vendor = Vendor;
 		this.Quantity = Quantity;
 	}
 
-	public Product(String ID, String Name, Category Category, double BuyingPrice, double SellingPrice, Vendor Vendor,
+	public Product(int ID, String Name, Category Category, double BuyingPrice, double SellingPrice, Vendor Vendor,
 			int Quantity, String Barcode) {
 		this.ID = ID;
 		this.Name = Name;
@@ -38,11 +38,11 @@ public class Product {
 		this.Barcode = Barcode;
 	}
 
-	public String getID() {
+	public int getID() {
 		return ID;
 	}
 
-	public void setID(String iD) {
+	public void setID(int iD) {
 		ID = iD;
 	}
 

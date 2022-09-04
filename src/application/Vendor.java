@@ -4,7 +4,7 @@ import java.util.Vector;
 
 public class Vendor {
 
-	private String ID;
+	private int ID;
 	private String Name;
 	private String Phone;
 	private String Email;
@@ -14,12 +14,12 @@ public class Vendor {
 		
 	}
 
-	public Vendor(String ID, String Name) {
+	public Vendor(int ID, String Name) {
 		this.ID = ID;
 		this.Name = Name;
 		this.ProductsOffered = new Vector<Product>();
 	}
-	public Vendor(String ID, String Name, String Phone, String Email) {
+	public Vendor(int ID, String Name, String Phone, String Email) {
 		this.ID = ID;
 		this.Name = Name;
 		this.setPhone(Phone);
@@ -27,7 +27,13 @@ public class Vendor {
 		this.ProductsOffered = new Vector<Product>();
 	}
 	
-	public Vendor(String ID, String Name, Vector<Product> ProductsOffered) {
+	public Vendor(int ID, String Name, String Phone, String Email, Vector<Product> ProductsOffered) {
+		this.ID = ID;
+		this.Name = Name;
+		this.ProductsOffered = ProductsOffered;
+	}
+	
+	public Vendor(int ID, String Name, Vector<Product> ProductsOffered) {
 		this.ID = ID;
 		this.Name = Name;
 		this.ProductsOffered = ProductsOffered;
@@ -49,11 +55,11 @@ public class Vendor {
 		Name = name;
 	}
 
-	public String getID() {
+	public int getID() {
 		return ID;
 	}
 
-	public void setID(String iD) {
+	public void setID(int iD) {
 		ID = iD;
 	}
 

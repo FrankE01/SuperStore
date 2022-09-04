@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
@@ -11,11 +11,12 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="E:/Projects/eclipse-workspace/SuperStore/jar/ikonli-bootstrapicons-pack-12.3.1.jar"/>
-	<classpathentry kind="lib" path="E:/Projects/eclipse-workspace/SuperStore/jar/ikonli-core-12.3.1.jar"/>
-	<classpathentry kind="lib" path="E:/Projects/eclipse-workspace/SuperStore/jar/ikonli-fontawesome5-pack-12.3.1.jar"/>
-	<classpathentry kind="lib" path="E:/Projects/eclipse-workspace/SuperStore/jar/ikonli-javafx-12.3.1.jar"/>
-	<classpathentry kind="lib" path="E:/Projects/eclipse-workspace/SuperStore/jar/mysql-connector-java-8.0.30.jar"/>
-	<classpathentry kind="lib" path="E:/Projects/eclipse-workspace/SuperStore/jar/barbecue-1.5-beta1.jar"/>
+	<classpathentry kind="lib" path="jar/barbecue-1.5-beta1.jar"/>
+	<classpathentry kind="lib" path="jar/ikonli-bootstrapicons-pack-12.3.1.jar"/>
+	<classpathentry kind="lib" path="jar/ikonli-core-12.3.1.jar"/>
+	<classpathentry kind="lib" path="jar/ikonli-fontawesome5-pack-12.3.1.jar"/>
+	<classpathentry kind="lib" path="jar/ikonli-javafx-12.3.1.jar"/>
+	<classpathentry kind="lib" path="jar/mysql-connector-java-8.0.30.jar"/>
+	<classpathentry kind="lib" path="jar/json-20220320.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

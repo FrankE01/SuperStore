@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="25.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.EditVendorController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="25.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.AddVendorController">
    <children>
       <Label text="Add Vendor">
          <font>
@@ -25,7 +25,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField promptText="Vendor Name" />
+            <TextField fx:id="nameBox" promptText="Vendor Name" />
          </children>
       </HBox>
       <HBox alignment="CENTER" layoutX="10.0" layoutY="203.0" prefWidth="200.0" spacing="20.0">
@@ -35,7 +35,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField promptText="Vendor Phone Number" />
+            <TextField fx:id="phoneBox" promptText="Vendor Phone Number" />
          </children>
       </HBox>
       <HBox alignment="CENTER" layoutX="10.0" layoutY="269.0" prefWidth="200.0" spacing="20.0">
@@ -45,12 +45,12 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField promptText="Vendor Email" />
+            <TextField fx:id="emailBox" promptText="Vendor Email" />
          </children>
       </HBox>
       <HBox alignment="CENTER" prefWidth="200.0" spacing="20.0">
          <children>
-            <Button fx:id="addButton1" layoutX="277.0" layoutY="10.0" mnemonicParsing="false" style="-fx-background-color: #246ded; -fx-background-radius: 30;" text="Add" textAlignment="CENTER" textFill="WHITE">
+            <Button fx:id="addButton" layoutX="277.0" layoutY="10.0" mnemonicParsing="false" onAction="#add" style="-fx-background-color: #246ded; -fx-background-radius: 30;" text="Add" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font size="14.0" />
                </font>
