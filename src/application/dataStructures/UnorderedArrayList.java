@@ -1,8 +1,9 @@
 package application.dataStructures;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
-public abstract class UnorderedArrayList<T> implements UnorderedListADT<T>, Iterable<T> {
+public class UnorderedArrayList<T> implements UnorderedListADT<T>, Iterable<T> {
 
 	private final static int DEFAULT_CAPACITY = 100;
 	private final static int NOT_FOUND = -1;
@@ -129,5 +130,72 @@ public abstract class UnorderedArrayList<T> implements UnorderedListADT<T>, Iter
 	private void expandCapacity() {
 		list = Arrays.copyOf(list, list.length * 2);
 
+	}
+
+	@Override
+	public T removeFirst() {
+		if (rear == 0) {
+            throw new EmptyCollectionException("list");
+        }
+        T result = list[0];
+        rear--;
+ 
+        for (int scan = 0; scan < rear; scan++) {
+            list[scan] = list[scan + 1];
+        }
+        list[rear] = null;
+ 
+        return result;
+	}
+
+	@Override
+	public T removeLast() {
+		if (rear == 0) {
+            throw new EmptyCollectionException("list");
+        }
+        T result = list[rear - 1];
+        rear--;
+        list[rear] = null;
+ 
+        return result;
+	}
+
+	@Override
+	public T first() {
+		return list[0];
+	}
+
+	@Override
+	public T last() {
+		return list[rear];
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return rear==0;
+	}
+
+	@Override
+	public int size() {
+		return rear;
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return null;
+	}
+	
+	@Override
+	public String toString() {
+		if (isEmpty()) {
+            return "List: {}";
+        }
+
+        String text = "List: {";
+        for (int i = 0; i < rear; i++) {
+            text = text + list[i] +", ";
+        }
+        text = text + "}";
+        return text;
 	}
 }

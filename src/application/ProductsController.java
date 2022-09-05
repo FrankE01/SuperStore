@@ -11,6 +11,8 @@ import java.util.ResourceBundle;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import application.dataStructures.ArrayStack;
+import application.dataStructures.CircularArrayQueue;
+import application.dataStructures.UnorderedArrayList;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -59,6 +61,8 @@ public class ProductsController implements Initializable {
 	public TextField searchBox;
 	public ObservableList<Product> data;
 	public ArrayStack<Product> products1to4;
+	public CircularArrayQueue<Product> products5to7;
+	public UnorderedArrayList<Product> products8to11;
 	public List<Vendor> vendors;
 	public List<Category> categories;
 
@@ -255,6 +259,8 @@ public class ProductsController implements Initializable {
 			}
 
 			products1to4 = new ArrayStack<>();
+			products5to7 = new CircularArrayQueue<>();
+			products8to11 = new UnorderedArrayList<>();
 
 			result = statement.executeQuery("SELECT * FROM product");
 			while (result.next()) {
@@ -278,6 +284,44 @@ public class ProductsController implements Initializable {
 					products1to4.push(new Product(result.getInt("id"), name, selectedC,
 							(double) result.getInt("cost_price"), (double) result.getInt("selling_price"), selectedV,
 							result.getInt("quantity"), result.getString("barcode")));
+				}else if(category == 5 || category == 6 || category == 7) {
+					String name = result.getString("name");
+
+					int vendorID = result.getInt("supplier");
+					Vendor selectedV = null;
+					Category selectedC = null;
+					for (Vendor v : vendors) {
+						if (v.getID() == (vendorID)) {
+							selectedV = v;
+						}
+					}
+					for (Category c : categories) {
+						if (c.getID() == category) {
+							selectedC = c;
+						}
+					}
+					products5to7.enqueue(new Product(result.getInt("id"), name, selectedC,
+							(double) result.getInt("cost_price"), (double) result.getInt("selling_price"), selectedV,
+							result.getInt("quantity"), result.getString("barcode")));
+				} else if(category == 8 || category == 9 || category == 10 || category == 11) {
+					String name = result.getString("name");
+
+					int vendorID = result.getInt("supplier");
+					Vendor selectedV = null;
+					Category selectedC = null;
+					for (Vendor v : vendors) {
+						if (v.getID() == (vendorID)) {
+							selectedV = v;
+						}
+					}
+					for (Category c : categories) {
+						if (c.getID() == category) {
+							selectedC = c;
+						}
+					}
+					products8to11.addToRear(new Product(result.getInt("id"), name, selectedC,
+							(double) result.getInt("cost_price"), (double) result.getInt("selling_price"), selectedV,
+							result.getInt("quantity"), result.getString("barcode")));
 				}
 			}
 
@@ -292,6 +336,17 @@ public class ProductsController implements Initializable {
 			Product p = products1to4.pop();
 			data.add(p);
 		}
+		size = products5to7.size();
+		for (int i = 0; i < size; i++) {
+			Product p = products5to7.dequeue();
+			data.add(p);
+		}
+		size = products8to11.size();
+		for (int i = 0; i < size; i++) {
+			Product p = products8to11.removeFirst();
+			data.add(p);
+		}
+		
 
 		idColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("ID"));
 		productColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("Name"));

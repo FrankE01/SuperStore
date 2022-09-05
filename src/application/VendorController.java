@@ -5,12 +5,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Vector;
 
 import application.dataStructures.ArrayStack;
+import application.dataStructures.CircularArrayQueue;
+import application.dataStructures.UnorderedArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -36,8 +38,11 @@ public class VendorController implements Initializable {
 	public TextField searchBox;
 	public Label totalVendors;
 	public List<Vendor> vendors;
+	public HashMap<Integer, Vendor> myVendors;
 	public List<Category> categories;
 	public ArrayStack<Product> products1to4;
+	public CircularArrayQueue<Product> products5to7;
+	public UnorderedArrayList<Product> products8to11;
 
 	public void toProducts(MouseEvent event) {
 
@@ -195,6 +200,8 @@ public class VendorController implements Initializable {
 			}
 
 			products1to4 = new ArrayStack<>();
+			products5to7 = new CircularArrayQueue<>();
+			products8to11 = new UnorderedArrayList<>();
 
 			result = statement.executeQuery("SELECT * FROM product");
 			while (result.next()) {
@@ -218,6 +225,44 @@ public class VendorController implements Initializable {
 					products1to4.push(new Product(result.getInt("id"), name, selectedC,
 							(double) result.getInt("cost_price"), (double) result.getInt("selling_price"), selectedV,
 							result.getInt("quantity"), result.getString("barcode")));
+				}else if(category == 5 || category == 6 || category == 7) {
+					String name = result.getString("name");
+
+					int vendorID = result.getInt("supplier");
+					Vendor selectedV = null;
+					Category selectedC = null;
+					for (Vendor v : vendors) {
+						if (v.getID() == (vendorID)) {
+							selectedV = v;
+						}
+					}
+					for (Category c : categories) {
+						if (c.getID() == category) {
+							selectedC = c;
+						}
+					}
+					products5to7.enqueue(new Product(result.getInt("id"), name, selectedC,
+							(double) result.getInt("cost_price"), (double) result.getInt("selling_price"), selectedV,
+							result.getInt("quantity"), result.getString("barcode")));
+				} else if(category == 8 || category == 9 || category == 10 || category == 11) {
+					String name = result.getString("name");
+
+					int vendorID = result.getInt("supplier");
+					Vendor selectedV = null;
+					Category selectedC = null;
+					for (Vendor v : vendors) {
+						if (v.getID() == (vendorID)) {
+							selectedV = v;
+						}
+					}
+					for (Category c : categories) {
+						if (c.getID() == category) {
+							selectedC = c;
+						}
+					}
+					products8to11.addToRear(new Product(result.getInt("id"), name, selectedC,
+							(double) result.getInt("cost_price"), (double) result.getInt("selling_price"), selectedV,
+							result.getInt("quantity"), result.getString("barcode")));
 				}
 			}
 			names = FXCollections.observableArrayList();
@@ -238,6 +283,30 @@ public class VendorController implements Initializable {
 			int size = products1to4.size();
 			for(int i = 0; i < size; i++) {
 				Product current = products1to4.pop();
+				for(Vendor v : vendors) {
+					if(current.getVendor().getID()==v.getID()) {
+						v.getProductsOffered().add(current);
+					}
+					if(!names.contains(v)) {
+						names.add(v);
+					}
+				}
+			}
+			size = products5to7.size();
+			for(int i = 0; i < size; i++) {
+				Product current = products5to7.dequeue();
+				for(Vendor v : vendors) {
+					if(current.getVendor().getID()==v.getID()) {
+						v.getProductsOffered().add(current);
+					}
+					if(!names.contains(v)) {
+						names.add(v);
+					}
+				}
+			}
+			size = products8to11.size();
+			for(int i = 0; i < size; i++) {
+				Product current = products8to11.removeLast();
 				for(Vendor v : vendors) {
 					if(current.getVendor().getID()==v.getID()) {
 						v.getProductsOffered().add(current);

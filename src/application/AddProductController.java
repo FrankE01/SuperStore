@@ -32,9 +32,8 @@ public class AddProductController implements Initializable {
 	public List<Vendor> vendors;
 
 	public void add() {
-		
-		if (nameBox.getText().isBlank() || barcodeBox.getText().isBlank()
-				|| barcodeBox.getText().length() != 12) {
+
+		if (nameBox.getText().isBlank() || barcodeBox.getText().isBlank() || barcodeBox.getText().length() != 12) {
 			ErrorMessage.display("Invalid Fields", "You can't have empty or invalid fields in your product");
 		} else {
 			try {
@@ -55,24 +54,29 @@ public class AddProductController implements Initializable {
 				}
 
 				double bc = Double.parseDouble(barcodeBox.getText());
-				System.out.println(bc);
-				String query = String.format(
-						"INSERT INTO product(name, category, cost_price, selling_price, supplier, quantity, barcode) VALUES ('%s',%d,%.1f,%.1f,%d,%d,'%s')",
-						nameBox.getText(), selectedCategory.getID(), Double.parseDouble(costPriceBox.getText()),
-						Double.parseDouble(sellingPriceBox.getText()), selectedVendor.getID(),
-						Integer.parseInt(quantityBox.getText()), barcodeBox.getText());
+
+				if (Integer.parseInt(quantityBox.getText()) > 200) {
+					ErrorMessage.display("Stocks too high", "The stock allocated is too high!");
+				} else {
+
+					String query = String.format(
+							"INSERT INTO product(name, category, cost_price, selling_price, supplier, quantity, barcode) VALUES ('%s',%d,%.1f,%.1f,%d,%d,'%s')",
+							nameBox.getText(), selectedCategory.getID(), Double.parseDouble(costPriceBox.getText()),
+							Double.parseDouble(sellingPriceBox.getText()), selectedVendor.getID(),
+							Integer.parseInt(quantityBox.getText()), barcodeBox.getText());
 
 //			String query = String.format(
 //					"UPDATE product SET name = '%s', category = %d, cost_price = %.1f, selling_price = %.1f, supplier = %d, quantity = %d, barcode = '%s' WHERE (id = %d);",
 //					nameBox.getText(), selectedCategory.getID(), Double.parseDouble(costPriceBox.getText()),
 //					Double.parseDouble(sellingPriceBox.getText()), selectedVendor.getID(),
 //					Integer.parseInt(quantityBox.getText()), barcodeBox.getText(), selectedProduct.getID());
-				statement.executeUpdate(query);
-				Stage addStage = (Stage) nameBox.getScene().getWindow();
-				addStage.close();
+					statement.executeUpdate(query);
+					Stage addStage = (Stage) nameBox.getScene().getWindow();
+					addStage.close();
+				}
 
-			}catch(SQLIntegrityConstraintViolationException e) {
-				ErrorMessage.display("Duplicate Product", "A product with the specified name already exists");
+//			} catch (SQLIntegrityConstraintViolationException e) {
+//				ErrorMessage.display("Duplicate Product", "A product with the specified name already exists");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} catch (NumberFormatException e) {
@@ -88,7 +92,7 @@ public class AddProductController implements Initializable {
 		try {
 			statement = DB_Connection.connection.createStatement();
 			ResultSet result = statement.executeQuery("SELECT * FROM product");
-			
+
 			while (result.next()) {
 				int category = result.getInt("category");
 				if (category == 1 || category == 2 || category == 3 || category == 4) {
@@ -108,6 +112,44 @@ public class AddProductController implements Initializable {
 						}
 					}
 					products1to4.push(new Product(result.getInt("id"), name, selectedC,
+							(double) result.getInt("cost_price"), (double) result.getInt("selling_price"), selectedV,
+							result.getInt("quantity"), result.getString("barcode")));
+				} else if (category == 5 || category == 6 || category == 7) {
+					String name = result.getString("name");
+
+					int vendorID = result.getInt("supplier");
+					Vendor selectedV = null;
+					Category selectedC = null;
+					for (Vendor v : vendors) {
+						if (v.getID() == (vendorID)) {
+							selectedV = v;
+						}
+					}
+					for (Category c : categories) {
+						if (c.getID() == category) {
+							selectedC = c;
+						}
+					}
+					products5to7.enqueue(new Product(result.getInt("id"), name, selectedC,
+							(double) result.getInt("cost_price"), (double) result.getInt("selling_price"), selectedV,
+							result.getInt("quantity"), result.getString("barcode")));
+				} else if (category == 8 || category == 9 || category == 10 || category == 11) {
+					String name = result.getString("name");
+
+					int vendorID = result.getInt("supplier");
+					Vendor selectedV = null;
+					Category selectedC = null;
+					for (Vendor v : vendors) {
+						if (v.getID() == (vendorID)) {
+							selectedV = v;
+						}
+					}
+					for (Category c : categories) {
+						if (c.getID() == category) {
+							selectedC = c;
+						}
+					}
+					products8to11.addToRear(new Product(result.getInt("id"), name, selectedC,
 							(double) result.getInt("cost_price"), (double) result.getInt("selling_price"), selectedV,
 							result.getInt("quantity"), result.getString("barcode")));
 				}
@@ -139,6 +181,8 @@ public class AddProductController implements Initializable {
 			}
 
 			products1to4 = new ArrayStack<>();
+			products5to7 = new CircularArrayQueue<>();
+			products8to11 = new UnorderedArrayList<>();
 
 			this.populateStack();
 		} catch (SQLException e) {

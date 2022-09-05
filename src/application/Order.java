@@ -8,13 +8,11 @@ public class Order {
 	private double TotalPrice;
 	private Vendor Vendor;
 	
-	public Order(int iD, String productName, String productBarcode, int quantitySold, double totalPrice, Vendor vendor) {
-		this.ID = iD;
+	public Order(String productName, String productBarcode, int quantitySold, double totalPrice) {
 		this.ProductName = productName;
 		this.ProductBarcode = productBarcode;
 		this.QuantitySold = quantitySold;
 		this.TotalPrice = totalPrice;
-		this.Vendor = vendor;
 	}
 	
 	public Order(int iD, String productName, String productBarcode, int quantitySold, double totalPrice) {
@@ -23,6 +21,15 @@ public class Order {
 		this.ProductBarcode = productBarcode;
 		this.QuantitySold = quantitySold;
 		this.TotalPrice = totalPrice;
+	}
+	
+	public Order(int iD, String productName, String productBarcode, int quantitySold, double totalPrice, Vendor vendor) {
+		this.ID = iD;
+		this.ProductName = productName;
+		this.ProductBarcode = productBarcode;
+		this.QuantitySold = quantitySold;
+		this.TotalPrice = totalPrice;
+		this.Vendor = vendor;
 	}
 	
 	public int getID() {

@@ -1,5 +1,6 @@
 package application;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -21,6 +22,8 @@ public class AddToCartController {
 
 		if (selectedProduct.getQuantity() < Integer.parseInt(quantityBox.getText())) {
 			ErrorMessage.display("Insufficient Products", "The quantity enterd is greater than the available stock");
+		} else if ((selectedProduct.getQuantity() - Integer.parseInt(quantityBox.getText())) < 20) {
+			ErrorMessage.display("Stock too low", "This product will run low on stock. Please add more");
 		} else {
 			Statement statement;
 			try {
@@ -37,9 +40,9 @@ public class AddToCartController {
 				query = String.format("UPDATE product SET quantity = %d WHERE (id = %d)",
 						selectedProduct.getQuantity() - Integer.parseInt(quantityBox.getText()),
 						selectedProduct.getID());
-				
+
 				statement.executeUpdate(query);
-				
+
 				Stage addStage = (Stage) nameLabel.getScene().getWindow();
 				addStage.close();
 
@@ -48,8 +51,26 @@ public class AddToCartController {
 			}
 		}
 	}
-	
+
 	public int returnQuantity() {
-		return Integer.parseInt(quantityBox.getText());
+		if (!quantityBox.getText().isBlank())
+			return Integer.parseInt(quantityBox.getText());
+		return 0;
+	}
+
+	public Order returnOrder() {
+		Product selectedProduct = (Product) nameLabel.getUserData();
+		Order o = null;
+		try {
+			Statement statement = DB_Connection.connection.createStatement();
+			ResultSet result = statement.executeQuery("SELECT * FROM inventory_management_system.order");
+			while (result.next()) {
+				o = new Order(result.getInt("id"), result.getString("name"), result.getString("barcode"),
+						result.getInt("quantity_sold"), result.getDouble("total_price"), selectedProduct.getVendor());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return o;
 	}
 }

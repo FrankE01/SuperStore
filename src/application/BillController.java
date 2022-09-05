@@ -188,13 +188,12 @@ public class BillController implements Initializable {
 
 			orders = new ArrayList<>();
 			result = statement.executeQuery("SELECT * FROM inventory_management_system.order");
-			System.out.println(LocalDateTime.now());
 			while (result.next()) {
 				orders.add(new Order(result.getInt("id"), result.getString("name"), result.getString("barcode"),
 						result.getInt("quantity_sold"), result.getDouble("total_price")));
 			}
 			
-			SimpleDateFormat format2 = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+			SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			myBills = new ArrayList<>();
 			result = statement.executeQuery("SELECT * FROM order_list");
 			while (result.next()) {
@@ -215,7 +214,7 @@ public class BillController implements Initializable {
 				});
 				
 				try {
-					myBills.add(new Bill(result.getInt("id"), productsPurchased, format2.parse(result.getString("date")), result.getInt("total_price"),
+					myBills.add(new Bill(result.getInt("id"), productsPurchased, format1.parse(result.getString("date")), result.getInt("total_price"),
 							result.getInt("total_quantity")));
 				} catch (ParseException e) {
 					e.printStackTrace();

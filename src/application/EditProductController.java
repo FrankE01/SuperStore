@@ -1,9 +1,11 @@
 package application;
 
 import java.net.URL;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -85,25 +87,25 @@ public class EditProductController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
-//		Statement statement;
-//		try {
-//			statement = DB_Connection.connection.createStatement();
-//			ResultSet result = statement.executeQuery("SELECT * FROM category");
-//
-//			categories = new ArrayList<>();
-//			while (result.next()) {
-//				categories.add(new Category(result.getInt("id"), result.getString("name")));
-//			}
-//
-//			result = statement.executeQuery("SELECT * FROM supplier");
-//			vendors = new ArrayList<>();
-//			while (result.next()) {
-//				vendors.add(new Vendor(result.getInt("id"), result.getString("name"), result.getString("phone"),
-//						result.getString("email")));
-//			}
-//
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
+		Statement statement;
+		try {
+			statement = DB_Connection.connection.createStatement();
+			ResultSet result = statement.executeQuery("SELECT * FROM category");
+
+			categories = new ArrayList<>();
+			while (result.next()) {
+				categories.add(new Category(result.getInt("id"), result.getString("name")));
+			}
+
+			result = statement.executeQuery("SELECT * FROM supplier");
+			vendors = new ArrayList<>();
+			while (result.next()) {
+				vendors.add(new Vendor(result.getInt("id"), result.getString("name"), result.getString("phone"),
+						result.getString("email")));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

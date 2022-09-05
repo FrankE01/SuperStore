@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -19,6 +20,7 @@ public class AddVendorController implements Initializable {
 	public TextField phoneBox;
 	public TextField emailBox;
 	public List<Vendor> vendors;
+	public HashMap<Integer, Vendor> myVendors;
 
 	public void add() {
 		
@@ -45,12 +47,16 @@ public class AddVendorController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
+		myVendors = new HashMap<>();
 		vendors = new ArrayList<>();
 		try {
 			Statement statement = DB_Connection.connection.createStatement();
 			ResultSet result = statement.executeQuery("SELECT * FROM supplier");
 			while (result.next()) {
 				vendors.add(new Vendor(result.getInt("id"), result.getString("name"), result.getString("phone"),
+						result.getString("email")));
+				
+				myVendors.put(result.getInt("id"), new Vendor(result.getInt("id"), result.getString("name"), result.getString("phone"),
 						result.getString("email")));
 			}
 

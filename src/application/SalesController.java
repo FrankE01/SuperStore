@@ -6,7 +6,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.json.JSONArray;
@@ -43,6 +45,7 @@ public class SalesController implements Initializable {
 	public Label totalLabel;
 	public TextField searchBox;
 	public List<Order> orders;
+	public Map<Integer, List<Order>> productSales;
 	public List<Category> categories;
 	public List<Vendor> vendors;
 	public int tax = 10;
@@ -124,12 +127,17 @@ public class SalesController implements Initializable {
 						addStage.setScene(scene);
 						addStage.showAndWait();
 
-						orders.add(new Order(p.getID(), p.getName(), p.getBarcode(), atcc.returnQuantity(),
-								p.getSellingPrice() * atcc.returnQuantity()));
-						
+//						orders.add(new Order(p.getName(), p.getBarcode(), atcc.returnQuantity(),
+//								p.getSellingPrice() * atcc.returnQuantity()));
+						orders.add(atcc.returnOrder());
+						productSales.put(p.getID(), (new ArrayList<>()));
+						productSales.get(p.getID()).add(new Order(p.getID(), p.getName(), p.getBarcode(),
+								atcc.returnQuantity(), p.getSellingPrice() * atcc.returnQuantity()));
+
 						sales = FXCollections.observableArrayList();
 						for (Order o : orders) {
 							sales.add(o);
+							System.out.println(o.getProductName());
 						}
 						barcodeColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("ProductBarcode"));
 						productColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("ProductName"));
@@ -180,7 +188,7 @@ public class SalesController implements Initializable {
 			total_quantity += o.getQuantitySold();
 			total_price += o.getTotalPrice();
 		}
-		total_price+=tax;
+		total_price += tax;
 		System.out.println(total_price);
 		try {
 			statement = DB_Connection.connection.createStatement();
@@ -203,6 +211,8 @@ public class SalesController implements Initializable {
 
 			ErrorMessage.display("Order Placed", "Order has been placed successfully");
 
+			
+			
 			sales = FXCollections.observableArrayList();
 			saleTable.setItems(sales);
 			orders = new ArrayList<>();
@@ -304,6 +314,7 @@ public class SalesController implements Initializable {
 
 		updateTable();
 		orders = new ArrayList<>();
+		productSales = new HashMap<>();
 
 	}
 }
