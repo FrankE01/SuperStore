@@ -194,7 +194,7 @@ SuperStore
 
 ### Run
 
-Run the projet using the run configurations created in step 4 of [Installation](#installation)
+Run the projet using the run configurations created in step 5 of [Installation](#installation)
 
 ## Authors and Acknowledgement
 
