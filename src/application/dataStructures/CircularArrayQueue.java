@@ -79,7 +79,7 @@ public class CircularArrayQueue<T> implements QueueADT<T> {
 
 	@Override
 	public boolean isEmpty() {
-		return front <= 0;
+		return rear <= 0;
 	}
 
 	@Override

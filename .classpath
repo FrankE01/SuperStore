@@ -12,11 +12,11 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="jar/barbecue-1.5-beta1.jar"/>
-	<classpathentry kind="lib" path="jar/ikonli-bootstrapicons-pack-12.3.1.jar"/>
 	<classpathentry kind="lib" path="jar/ikonli-core-12.3.1.jar"/>
 	<classpathentry kind="lib" path="jar/ikonli-fontawesome5-pack-12.3.1.jar"/>
 	<classpathentry kind="lib" path="jar/ikonli-javafx-12.3.1.jar"/>
 	<classpathentry kind="lib" path="jar/mysql-connector-java-8.0.30.jar"/>
 	<classpathentry kind="lib" path="jar/json-20220320.jar"/>
+	<classpathentry kind="lib" path="jar/dotenv-java-2.2.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

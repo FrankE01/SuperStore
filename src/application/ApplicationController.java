@@ -14,13 +14,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class ApplicationController implements Initializable {
 	public TextField emailBox;
 	public TextField passwordBox;
+	public Button loginButton;
 
 	public void login(ActionEvent event) {
 
@@ -82,6 +86,12 @@ public class ApplicationController implements Initializable {
 
 		} catch (SQLException e1) {
 			e1.printStackTrace();
+		}
+	}
+	
+	public void handleEnterLogin(KeyEvent key) {
+		if (key.getCode().equals(KeyCode.ENTER)) {
+			loginButton.fire();
 		}
 	}
 

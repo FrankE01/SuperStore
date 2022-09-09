@@ -97,6 +97,20 @@ public class BillController implements Initializable {
 			e.printStackTrace();
 		}
 	}
+	
+	public void toReports(MouseEvent event) {
+		Stage reportStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+		try {
+			BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("Reports.fxml"));
+			Scene scene = new Scene(root, 1280, 720);
+			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			reportStage.setScene(scene);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void getRow(MouseEvent event) {
 		if (event.isPrimaryButtonDown()) {

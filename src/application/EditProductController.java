@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import application.dataStructures.ArrayStack;
+import application.dataStructures.CircularArrayQueue;
+import application.dataStructures.UnorderedArrayList;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -27,7 +30,7 @@ public class EditProductController implements Initializable {
 	public Product selectedProduct;
 
 	public void edit() {
-		selectedProduct = (Product) nameBox.getUserData();
+		selectedProduct = (Product) costPriceBox.getUserData();
 
 		try {
 			Statement statement = DB_Connection.connection.createStatement();
@@ -58,6 +61,60 @@ public class EditProductController implements Initializable {
 					Double.parseDouble(sellingPriceBox.getText()), selectedVendor.getID(),
 					Integer.parseInt(quantityBox.getText()), barcodeBox.getText(), selectedProduct.getID());
 			statement.executeUpdate(query);
+			
+			@SuppressWarnings("unchecked")
+			ArrayStack<Product> products1to4 = (ArrayStack<Product>)nameBox.getUserData();
+			@SuppressWarnings("unchecked")
+			CircularArrayQueue<Product> products5to7 = (CircularArrayQueue<Product>)categoryBox.getUserData();
+			@SuppressWarnings("unchecked")
+			UnorderedArrayList<Product> products8to11 = (UnorderedArrayList<Product>)quantityBox.getUserData();
+			
+			
+			if (selectedCategory.getID() == 1 || selectedCategory.getID() == 2 || selectedCategory.getID() == 3
+					|| selectedCategory.getID() == 4) {
+				
+				ArrayStack<Product> temp = new ArrayStack<>();
+				int size = products1to4.size();
+				
+				for(int i = 0; i < size; i++) {
+					Product p = products1to4.pop();
+					if(p.getID() == selectedProduct.getID()) {
+						p.setQuantity(p.getQuantity()-Integer.parseInt(quantityBox.getText()));
+					}
+					temp.push(p);
+				}
+				products1to4 = temp;
+				
+			} else if (selectedCategory.getID() == 5 || selectedCategory.getID() == 6 || selectedCategory.getID() == 7) {
+				
+				CircularArrayQueue<Product> temp = new CircularArrayQueue<>();
+				int size = products5to7.size();
+				
+				for(int i = 0; i < size; i++) {
+					Product p = products5to7.dequeue();
+					if(p.getID() == selectedProduct.getID()) {
+						p.setQuantity(p.getQuantity()-Integer.parseInt(quantityBox.getText()));
+					}
+					temp.enqueue(p);
+				}
+				products5to7 = temp;
+				
+			} else if (selectedCategory.getID() == 8 || selectedCategory.getID() == 9 || selectedCategory.getID() == 10
+					|| selectedCategory.getID() == 11) {
+				
+				UnorderedArrayList<Product> temp = new UnorderedArrayList<>();
+				int size = products8to11.size();
+				
+				for(int i = 0; i < size; i++) {
+					Product p = products8to11.removeLast();
+					if(p.getID() == selectedProduct.getID()) {
+						p.setQuantity(p.getQuantity()-Integer.parseInt(quantityBox.getText()));
+					}
+					temp.addToRear(p);
+				}
+				products8to11 = temp;
+			}
+			
 			Stage editStage = (Stage) nameBox.getScene().getWindow();
 			editStage.close();
 
@@ -71,12 +128,50 @@ public class EditProductController implements Initializable {
 	}
 	
 	public void delete() {
-		selectedProduct = (Product) nameBox.getUserData();
+		selectedProduct = (Product) costPriceBox.getUserData();
 		
 		try {
 			Statement statement = DB_Connection.connection.createStatement();
 			String query = String.format("DELETE FROM product WHERE (id = %d);", selectedProduct.getID());
 			statement.executeUpdate(query);
+
+			@SuppressWarnings("unchecked")
+			ArrayStack<Product> products1to4 = (ArrayStack<Product>)nameBox.getUserData();
+			@SuppressWarnings("unchecked")
+			CircularArrayQueue<Product> products5to7 = (CircularArrayQueue<Product>)categoryBox.getUserData();
+			@SuppressWarnings("unchecked")
+			UnorderedArrayList<Product> products8to11 = (UnorderedArrayList<Product>)quantityBox.getUserData();
+			
+			ArrayStack<Product> temp = new ArrayStack<>();
+			int size = products1to4.size();
+			for(int i = 0; i < size; i++) {
+				Product p = products1to4.pop();
+				if(p.getID() != selectedProduct.getID()) {
+					temp.push(p);
+				}
+			}
+			products1to4 = temp;
+			
+			CircularArrayQueue<Product> temp2 = new CircularArrayQueue<>();
+			int size2 = products5to7.size();
+			for(int i = 0; i < size2; i++) {
+				Product p = products5to7.dequeue();
+				if(p.getID() != selectedProduct.getID()) {
+					temp2.enqueue(p);
+				}
+			}
+			products5to7 = temp2;
+			
+			UnorderedArrayList<Product> temp3 = new UnorderedArrayList<>();
+			int size3 = products8to11.size();
+			for(int i = 0; i < size3; i++) {
+				Product p = products8to11.removeLast();
+				if(p.getID() != selectedProduct.getID()) {
+					temp3.addToRear(p);
+				}
+			}
+			products8to11 = temp3;
+			
 			Stage editStage = (Stage) nameBox.getScene().getWindow();
 			editStage.close();
 		} catch (SQLException e) {

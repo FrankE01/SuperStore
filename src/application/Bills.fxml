@@ -125,6 +125,15 @@
                   </DropShadow>
                </effect>
             </FontIcon>
+            <Circle fx:id="reportsCircle" fill="#246ded" onMouseClicked="#toReports" radius="30.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-translate-y: 45; -fx-fill: transparent;">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Circle>
+            <FontIcon fx:id="reportsIcon" iconLiteral="fas-file-alt" iconSize="30" onMouseClicked="#toReports">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></FontIcon>
             <Region prefHeight="144.0" prefWidth="100.0" />
          </children>
          <BorderPane.margin>

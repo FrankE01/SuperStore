@@ -37,6 +37,17 @@ public class Product {
 		this.SellingPrice = SellingPrice;
 		this.Barcode = Barcode;
 	}
+	
+	public Product(String Name, Category Category, double BuyingPrice, double SellingPrice, Vendor Vendor,
+			int Quantity, String Barcode) {
+		this.Name = Name;
+		this.Vendor = Vendor;
+		this.Quantity = Quantity;
+		this.Category = Category;
+		this.BuyingPrice = BuyingPrice;
+		this.SellingPrice = SellingPrice;
+		this.Barcode = Barcode;
+	}
 
 	public int getID() {
 		return ID;

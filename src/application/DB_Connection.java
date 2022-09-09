@@ -4,23 +4,25 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 public class DB_Connection {
 	public static Connection connection = null;
-	
+
 	public static void open() {
 		try {
-			String host = "jdbc:mysql://localhost:3306/inventory_management_system";
-			connection = DriverManager.getConnection(host, "Frank", "010601Succes$");
+
+			Dotenv dotenv = Dotenv.configure().load();
+			connection = DriverManager.getConnection(dotenv.get("DB_HOST") + dotenv.get("DB_NAME"),
+					dotenv.get("DB_USER"), dotenv.get("DB_PASSWORD"));
 			System.out.println("connected");
 		} catch (SQLException e) {
 			e.getMessage();
-		} catch(Exception e) {
-			e.getMessage();
 		}
 	}
-	
+
 	public static void close() {
-		if(connection != null) {
+		if (connection != null) {
 			try {
 				connection.close();
 			} catch (SQLException ex) {
@@ -28,5 +30,5 @@ public class DB_Connection {
 			}
 		}
 	}
-	
+
 }

@@ -1,5 +1,6 @@
 package application;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -60,9 +61,14 @@ public class ProductsController implements Initializable {
 	public ImageView barcode;
 	public TextField searchBox;
 	public ObservableList<Product> data;
+	
+	
 	public ArrayStack<Product> products1to4;
 	public CircularArrayQueue<Product> products5to7;
 	public UnorderedArrayList<Product> products8to11;
+	
+	
+	
 	public List<Vendor> vendors;
 	public List<Category> categories;
 
@@ -109,6 +115,20 @@ public class ProductsController implements Initializable {
 			e.printStackTrace();
 		}
 	}
+	
+	public void toReports(MouseEvent event) {
+		Stage reportStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+		try {
+			BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("Reports.fxml"));
+			Scene scene = new Scene(root, 1280, 720);
+			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			reportStage.setScene(scene);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void add() {
 		Stage addStage = new Stage();
@@ -138,11 +158,17 @@ public class ProductsController implements Initializable {
 
 			apc.categoryBox.getItems().setAll(categoryNames);
 			apc.vendorBox.getItems().setAll(vendorNames);
+			
+			apc.nameBox.setUserData(products1to4);
+			apc.categoryBox.setUserData(products5to7);
+			apc.quantityBox.setUserData(products8to11);
 
 			Scene scene = new Scene(root, 600, 400);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			addStage.setScene(scene);
 			addStage.showAndWait();
+			
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -197,7 +223,11 @@ public class ProductsController implements Initializable {
 				epc.sellingPriceBox.setText(Double.toString(selectedProduct.getSellingPrice()));
 				epc.quantityBox.setText(Integer.toString(selectedProduct.getQuantity()));
 				epc.barcodeBox.setText(selectedProduct.getBarcode());
-				epc.nameBox.setUserData(selectedProduct);
+				epc.costPriceBox.setUserData(selectedProduct);
+				
+				epc.nameBox.setUserData(products1to4);
+				epc.categoryBox.setUserData(products5to7);
+				epc.quantityBox.setUserData(products8to11);
 
 				Scene scene = new Scene(root, 600, 400);
 				scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
@@ -303,6 +333,7 @@ public class ProductsController implements Initializable {
 					products5to7.enqueue(new Product(result.getInt("id"), name, selectedC,
 							(double) result.getInt("cost_price"), (double) result.getInt("selling_price"), selectedV,
 							result.getInt("quantity"), result.getString("barcode")));
+					
 				} else if(category == 8 || category == 9 || category == 10 || category == 11) {
 					String name = result.getString("name");
 
@@ -324,6 +355,7 @@ public class ProductsController implements Initializable {
 							result.getInt("quantity"), result.getString("barcode")));
 				}
 			}
+			
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -373,6 +405,18 @@ public class ProductsController implements Initializable {
 			totalItems.setText(totalItemsCounter + " items");
 		}
 	}
+	
+	public ArrayStack<Product> getProducts1to4() {
+		return products1to4;
+	}
+	
+	public CircularArrayQueue<Product> getProducts5to7() {
+		return products5to7;
+	}
+	public UnorderedArrayList<Product> getProducts8to11() {
+		return products8to11;
+	}
+
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
